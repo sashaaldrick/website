@@ -32,19 +32,19 @@
 
 		document.body.classList.add('js-loaded', 'custom-cursor');
 
-		const links = document.querySelectorAll('a');
-		links.forEach((link) => {
-			link.addEventListener('mouseenter', () => handleLinkHover(true));
-			link.addEventListener('mouseleave', () => handleLinkHover(false));
+		const interactiveElements = document.querySelectorAll('a, button');
+		interactiveElements.forEach((element) => {
+			element.addEventListener('mouseenter', () => handleLinkHover(true));
+			element.addEventListener('mouseleave', () => handleLinkHover(false));
 		});
 
 		document.addEventListener('mousemove', handleMouseMove);
 
 		return () => {
 			document.removeEventListener('mousemove', handleMouseMove);
-			links.forEach((link) => {
-				link.removeEventListener('mouseenter', () => handleLinkHover(true));
-				link.removeEventListener('mouseleave', () => handleLinkHover(false));
+			interactiveElements.forEach((element) => {
+				element.removeEventListener('mouseenter', () => handleLinkHover(true));
+				element.removeEventListener('mouseleave', () => handleLinkHover(false));
 			});
 		};
 	});
