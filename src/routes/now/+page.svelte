@@ -13,21 +13,13 @@
 </svelte:head>
 
 <main class="min-h-screen bg-background text-text">
-	<div class="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
-		<div class="space-y-8">
-			<Title />
-			<Nav />
+	<div class="mx-auto px-4 py-8 sm:px-6 lg:px-8">
+		<section class="prose prose-lg max-w-none">
+			<h1>Now</h1>
+			<p>What I'm focused on right now.</p>
+		</section>
 
-			<div class="space-y-12">
-				<section class="prose prose-lg max-w-none">
-					{@html marked.parse(data.content)}
-				</section>
-
-				<section class="animate-fade-in">
-					<NowStatus />
-				</section>
-			</div>
-		</div>
+		<NowStatus />
 	</div>
 </main>
 

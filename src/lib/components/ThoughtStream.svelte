@@ -58,7 +58,7 @@
 </script>
 
 <div class="thought-stream" bind:this={container} role="feed" aria-busy={loading}>
-	<div class="mx-auto max-w-3xl px-4 py-8">
+	<div class="mx-auto px-4 py-8">
 		{#each thoughts as thought, index (thought.id)}
 			<div
 				use:fade={{

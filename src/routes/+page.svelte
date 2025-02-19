@@ -24,7 +24,7 @@
 </svelte:head>
 
 <div class="min-h-screen bg-background text-text">
-	<div class="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
+	<div class="mx-auto px-4 py-8 sm:px-6 lg:px-8">
 		<div class="space-y-8">
 			<Title />
 			<Nav />

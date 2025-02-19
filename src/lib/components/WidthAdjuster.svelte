@@ -2,7 +2,7 @@
 <script lang="ts">
 	import { textWidth } from '$lib/stores/layout';
 
-	const widths = [65, 85]; // ch units for medium and wide
+	const widths = [65, 85, 105]; // ch units for medium, wide, and extra wide
 	let currentIndex = 1; // Start with wide width (85ch)
 
 	function cycleWidth() {
@@ -36,6 +36,16 @@
 		<div
 			class="absolute inset-0 -z-10 h-3 -translate-y-1 blur-sm transition-opacity duration-300"
 			class:glow={isActive(1)}
+		/>
+	</div>
+	<div
+		class="relative h-0.5 w-7 rounded-full transition-all duration-300"
+		class:active={isActive(2)}
+		class:inactive={!isActive(2)}
+	>
+		<div
+			class="absolute inset-0 -z-10 h-3 -translate-y-1 blur-sm transition-opacity duration-300"
+			class:glow={isActive(2)}
 		/>
 	</div>
 </button>
