@@ -2,14 +2,55 @@
 <script lang="ts">
 	import { marked } from 'marked';
 	import type { TextThought } from '$lib/types/thought';
+	import { onMount } from 'svelte';
 
 	export let thought: TextThought;
 
+	let article: HTMLElement;
+	let isInCenter = false;
+
 	$: html = marked.parse(thought.content) as string;
+
+	onMount(() => {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					// Calculate how close to center the element is
+					if (entry.isIntersecting) {
+						const elementCenter =
+							entry.boundingClientRect.top + entry.boundingClientRect.height / 2;
+						const viewportCenter = window.innerHeight / 2;
+						const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
+						const threshold = window.innerHeight * 0.2; // 20% of viewport height
+
+						isInCenter = distanceFromCenter < threshold;
+					} else {
+						isInCenter = false;
+					}
+				});
+			},
+			{
+				threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+				rootMargin: '-20% 0px -20% 0px'
+			}
+		);
+
+		if (article) {
+			observer.observe(article);
+		}
+
+		return () => {
+			if (article) {
+				observer.unobserve(article);
+			}
+		};
+	});
 </script>
 
 <article
-	class="group relative mx-auto w-full max-w-lg overflow-hidden rounded-xl backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+	bind:this={article}
+	class="group relative mx-auto w-full max-w-lg overflow-hidden rounded-xl backdrop-blur-sm transition-all duration-500"
+	class:in-center={isInCenter}
 	style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05);"
 >
 	<div class="p-4 sm:p-6">
@@ -34,12 +75,30 @@
 		{/if}
 	</div>
 	<div
-		class="absolute inset-0 -z-10 bg-gradient-to-br from-purple-500/5 to-blue-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+		class="absolute inset-0 -z-10 bg-gradient-to-br from-purple-500/5 to-blue-500/5 opacity-0 transition-opacity duration-500"
+		class:opacity-100={isInCenter}
 	/>
 </article>
 
 <style lang="postcss">
 	:global(.prose pre) {
 		@apply bg-gray-900/50 backdrop-blur-sm;
+	}
+
+	article {
+		transform: scale(0.98);
+		filter: brightness(0.8);
+	}
+
+	article.in-center {
+		transform: scale(1);
+		filter: brightness(1);
+	}
+
+	/* Smooth transition for non-centered cards */
+	article:not(.in-center) {
+		transition:
+			transform 0.5s ease-out,
+			filter 0.5s ease-out;
 	}
 </style>
