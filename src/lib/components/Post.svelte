@@ -54,20 +54,20 @@
 	style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05);"
 >
 	<div class="p-4 sm:p-6">
-		<div class="mb-4 text-sm text-gray-400">
+		<div class="mb-4 text-sm text-text-secondary">
 			{thought.timestamp.toLocaleDateString('en-US', {
 				year: 'numeric',
 				month: 'long',
 				day: 'numeric'
 			})}
 		</div>
-		<div class="prose prose-sm prose-invert max-w-none">
+		<div class="prose prose-sm max-w-none">
 			{@html html}
 		</div>
 		{#if thought.tags?.length}
 			<div class="mt-4 flex flex-wrap gap-2">
 				{#each thought.tags as tag}
-					<span class="rounded-full bg-gray-800 px-3 py-1 text-xs text-gray-300">
+					<span class="rounded-full bg-border px-3 py-1 text-xs text-text-secondary">
 						{tag}
 					</span>
 				{/each}
@@ -82,7 +82,8 @@
 
 <style lang="postcss">
 	:global(.prose pre) {
-		@apply bg-gray-900/50 backdrop-blur-sm;
+		background-color: color-mix(in srgb, var(--border) 50%, transparent);
+		@apply backdrop-blur-sm;
 	}
 
 	article {

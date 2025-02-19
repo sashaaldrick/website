@@ -4,13 +4,19 @@ export default {
     darkMode: 'class',
     theme: {
         extend: {
+            colors: {
+                background: 'var(--background)',
+                text: 'var(--text)',
+                'text-secondary': 'var(--text-secondary)',
+                border: 'var(--border)',
+            },
             typography: {
                 DEFAULT: {
                     css: {
                         maxWidth: '65ch',
-                        color: 'rgb(243 244 246)',
+                        color: 'var(--text)',
                         '[class~="lead"]': {
-                            color: 'rgb(209 213 219)',
+                            color: 'var(--text-secondary)',
                         },
                         a: {
                             color: 'rgb(96 165 250)',
@@ -20,7 +26,7 @@ export default {
                             },
                         },
                         strong: {
-                            color: 'rgb(243 244 246)',
+                            color: 'var(--text)',
                         },
                         'ol[type="A"]': {
                             '--list-counter-style': 'upper-alpha',
@@ -56,7 +62,7 @@ export default {
                             content: 'counter(list-item, var(--list-counter-style, decimal)) "."',
                             position: 'absolute',
                             left: '-1.75rem',
-                            color: 'rgb(156 163 175)',
+                            color: 'var(--text-secondary)',
                         },
                         ul: {
                             listStyleType: 'disc',
@@ -67,7 +73,7 @@ export default {
                         'ul > li::before': {
                             content: '""',
                             position: 'absolute',
-                            backgroundColor: 'rgb(156 163 175)',
+                            backgroundColor: 'var(--text-secondary)',
                             borderRadius: '50%',
                             width: '0.375em',
                             height: '0.375em',
@@ -75,15 +81,15 @@ export default {
                             left: '-1.25rem',
                         },
                         hr: {
-                            borderColor: 'rgb(75 85 99)',
+                            borderColor: 'var(--border)',
                             borderTopWidth: 1,
                         },
                         blockquote: {
                             fontWeight: '500',
                             fontStyle: 'italic',
-                            color: 'rgb(209 213 219)',
+                            color: 'var(--text-secondary)',
                             borderLeftWidth: '0.25rem',
-                            borderLeftColor: 'rgb(75 85 99)',
+                            borderLeftColor: 'var(--border)',
                             quotes: '"\\201C""\\201D""\\2018""\\2019"',
                         },
                         'blockquote p:first-of-type::before': {
@@ -93,36 +99,36 @@ export default {
                             content: 'close-quote',
                         },
                         h1: {
-                            color: 'rgb(243 244 246)',
+                            color: 'var(--text)',
                         },
                         'h1 strong': {
-                            color: 'rgb(243 244 246)',
+                            color: 'var(--text)',
                             fontWeight: '700',
                         },
                         h2: {
-                            color: 'rgb(243 244 246)',
+                            color: 'var(--text)',
                         },
                         'h2 strong': {
-                            color: 'rgb(243 244 246)',
+                            color: 'var(--text)',
                             fontWeight: '700',
                         },
                         h3: {
-                            color: 'rgb(243 244 246)',
+                            color: 'var(--text)',
                         },
                         'h3 strong': {
-                            color: 'rgb(243 244 246)',
+                            color: 'var(--text)',
                             fontWeight: '700',
                         },
                         h4: {
-                            color: 'rgb(243 244 246)',
+                            color: 'var(--text)',
                         },
                         'h4 strong': {
-                            color: 'rgb(243 244 246)',
+                            color: 'var(--text)',
                             fontWeight: '700',
                         },
                         code: {
-                            color: 'rgb(243 244 246)',
-                            backgroundColor: 'rgb(31 41 55)',
+                            color: 'var(--text)',
+                            backgroundColor: 'var(--border)',
                             paddingLeft: '0.5rem',
                             paddingRight: '0.5rem',
                             paddingTop: '0.25rem',
@@ -137,8 +143,8 @@ export default {
                             content: '""',
                         },
                         pre: {
-                            color: 'rgb(243 244 246)',
-                            backgroundColor: 'rgb(31 41 55)',
+                            color: 'var(--text)',
+                            backgroundColor: 'var(--border)',
                             borderRadius: '0.375rem',
                             padding: '1rem',
                         },
@@ -149,11 +155,11 @@ export default {
                             fontWeight: '400',
                         },
                         thead: {
-                            color: 'rgb(243 244 246)',
-                            borderBottomColor: 'rgb(75 85 99)',
+                            color: 'var(--text)',
+                            borderBottomColor: 'var(--border)',
                         },
                         'tbody tr': {
-                            borderBottomColor: 'rgb(55 65 81)',
+                            borderBottomColor: 'var(--border)',
                         },
                     },
                 },

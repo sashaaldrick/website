@@ -5,8 +5,30 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: theme(colors.gray.50);
+    --text: theme(colors.gray.900);
+    --text-secondary: theme(colors.gray.600);
+    --border: theme(colors.gray.200);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  :root.dark {
+    --background: theme(colors.gray.950);
+    --text: theme(colors.gray.100);
+    --text-secondary: theme(colors.gray.400);
+    --border: theme(colors.gray.800);
+    --glass-bg: rgba(0, 0, 0, 0.3);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  }
+
   html {
     font-family: 'Aileron', system-ui, -apple-system, sans-serif;
+    background-color: var(--background);
+    color: var(--text);
   }
 
   /* Typography classes */

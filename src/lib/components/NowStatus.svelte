@@ -92,6 +92,8 @@
 		{#each focusAreas as area, i}
 			<div
 				class="focus-area"
+				role="button"
+				tabindex="0"
 				on:mouseenter={() => {
 					hoveredArea = i;
 					draw();
@@ -118,10 +120,10 @@
 		align-items: flex-start;
 		gap: 2rem;
 		padding: 2rem;
-		background: theme(colors.gray.900 / 30%);
+		background-color: color-mix(in srgb, var(--border) 30%, transparent);
 		backdrop-filter: blur(8px);
 		border-radius: 1rem;
-		border: 1px solid theme(colors.gray.800);
+		border: 1px solid var(--border);
 	}
 
 	canvas {
@@ -140,14 +142,14 @@
 	.focus-area {
 		padding: 0.75rem;
 		border-radius: 0.5rem;
-		background: theme(colors.gray.900 / 30%);
-		border: 1px solid theme(colors.gray.800 / 50%);
+		background-color: color-mix(in srgb, var(--border) 30%, transparent);
+		border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
 		transition: all 0.2s ease;
 	}
 
 	.focus-area:hover {
-		background: theme(colors.gray.900 / 50%);
-		border-color: theme(colors.gray.700);
+		background-color: color-mix(in srgb, var(--border) 50%, transparent);
+		border-color: var(--border);
 	}
 
 	.focus-header {
@@ -165,18 +167,18 @@
 
 	.name {
 		font-weight: 500;
-		color: theme(colors.gray.100);
+		color: var(--text);
 	}
 
 	.progress {
 		margin-left: auto;
 		font-size: 0.875rem;
-		color: theme(colors.gray.400);
+		color: var(--text-secondary);
 	}
 
 	.description {
 		margin: 0;
 		font-size: 0.875rem;
-		color: theme(colors.gray.400);
+		color: var(--text-secondary);
 	}
 </style>

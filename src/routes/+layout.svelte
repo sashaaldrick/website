@@ -1,6 +1,9 @@
 <script lang="ts">
 	import '../app.postcss';
+	import Cursor from '$lib/components/Cursor.svelte';
 </script>
+
+<Cursor />
 
 <div class="app">
 	<div class="container">
