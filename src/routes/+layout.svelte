@@ -1,12 +1,13 @@
 <script lang="ts">
 	import '../app.postcss';
 	import Cursor from '$lib/components/Cursor.svelte';
+	import { textWidth } from '$lib/stores/layout';
 </script>
 
 <Cursor />
 
 <div class="app">
-	<div class="container">
+	<div class="container" style="max-width: {$textWidth}ch">
 		<slot />
 	</div>
 </div>
@@ -31,8 +32,8 @@
 
 	.container {
 		width: 100%;
-		max-width: 65ch;
 		margin: 0 auto;
 		padding: 2rem;
+		transition: max-width 0.3s ease;
 	}
 </style>

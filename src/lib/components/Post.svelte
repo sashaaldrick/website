@@ -3,6 +3,7 @@
 	import { marked } from 'marked';
 	import type { TextThought } from '$lib/types/thought';
 	import { onMount } from 'svelte';
+	import { textWidth } from '$lib/stores/layout';
 
 	export let thought: TextThought;
 
@@ -49,9 +50,9 @@
 
 <article
 	bind:this={article}
-	class="group relative mx-auto w-full max-w-lg overflow-hidden rounded-xl backdrop-blur-sm transition-all duration-500"
+	class="group relative mx-auto w-full overflow-hidden rounded-xl backdrop-blur-sm transition-all duration-500"
 	class:in-center={isInCenter}
-	style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05);"
+	style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); max-width: {$textWidth}ch;"
 >
 	<div class="p-4 sm:p-6">
 		<div class="mb-4 text-sm text-text-secondary">
@@ -100,6 +101,7 @@
 	article:not(.in-center) {
 		transition:
 			transform 0.5s ease-out,
-			filter 0.5s ease-out;
+			filter 0.5s ease-out,
+			max-width 0.3s ease;
 	}
 </style>

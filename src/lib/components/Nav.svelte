@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
+	import WidthAdjuster from './WidthAdjuster.svelte';
 
 	let isDark = true;
 
@@ -59,7 +60,8 @@
 				<a href="/photos" class="nav-link text-lg">Photos</a>
 			</li>
 		{/if}
-		<li class="ml-auto">
+		<li class="ml-auto flex items-center space-x-2">
+			<WidthAdjuster />
 			<button
 				on:click={toggleTheme}
 				class="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background text-text-secondary transition-all hover:text-text"
