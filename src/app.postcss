@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  /* Glass morphism components */
+  .glass {
+    @apply backdrop-blur-sm;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+
+  /* Custom scrollbar */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: theme(colors.gray.700) theme(colors.gray.900);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: theme(colors.gray.900);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: theme(colors.gray.700);
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: theme(colors.gray.600);
+  }
+}
+
+@layer utilities {
+  /* Container query utilities */
+  @container (min-width: theme(screens.sm)) {
+    .container-sm\:text-lg {
+      font-size: theme(fontSize.lg);
+    }
+  }
+
+  @container (min-width: theme(screens.md)) {
+    .container-md\:text-xl {
+      font-size: theme(fontSize.xl);
+    }
+  }
+
+  /* Animation utilities */
+  .animate-spring {
+    animation-timing-function: cubic-bezier(
+      var(--spring-stiffness),
+      var(--spring-damping),
+      var(--spring-mass),
+      1
+    );
+  }
+} 
