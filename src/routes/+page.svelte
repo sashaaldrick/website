@@ -11,163 +11,95 @@
 	let cursorDot: HTMLDivElement;
 	let mouseX = 0;
 	let mouseY = 0;
+	let targetX = 0;
+	let targetY = 0;
 	let isHovering = false;
-	let indexHtml: string;
-	let lastCursorLog = 0;
+	let rafId: number;
+	let indexHtml = marked.parse(data.indexContent) as string;
 
-	function updateCursor(e: MouseEvent) {
-		// Get the actual mouse coordinates relative to the viewport
-		mouseX = e.clientX;
-		mouseY = e.clientY;
+	function updateCursor() {
+		// Smooth interpolation
+		mouseX += (targetX - mouseX) * 0.2;
+		mouseY += (targetY - mouseY) * 0.2;
 
-		// Log every few seconds to avoid spam
-		const now = Date.now();
-		if (now - lastCursorLog > 2000) {
-			console.log('Cursor position:', {
-				mouseX,
-				mouseY,
-				pageX: e.pageX,
-				pageY: e.pageY,
-				screenX: e.screenX,
-				screenY: e.screenY,
-				scrollX: window.scrollX,
-				scrollY: window.scrollY
-			});
-			lastCursorLog = now;
-		}
-
-		// Apply the transform directly to both elements
 		const transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
 		cursor.style.transform = transform;
 		cursorDot.style.transform = transform;
+
+		rafId = requestAnimationFrame(updateCursor);
 	}
 
-	function handleMouseEnter(e: MouseEvent) {
-		if ((e.target as HTMLElement).tagName === 'A') {
-			isHovering = true;
-		}
+	function handleMouseMove(e: MouseEvent) {
+		targetX = e.clientX;
+		targetY = e.clientY;
 	}
 
-	function handleMouseLeave(e: MouseEvent) {
-		if ((e.target as HTMLElement).tagName === 'A') {
-			isHovering = false;
-		}
+	function handleLinkHover(isEntering: boolean) {
+		isHovering = isEntering;
 	}
 
-	$: {
-		console.log('Parsing markdown content');
-		indexHtml = marked.parse(data.indexContent) as string;
-		console.log('Sample of parsed HTML:', indexHtml.substring(0, 200));
-	}
-
-	$: posts = data.posts.map(
-		(post) =>
-			({
-				type: 'text' as const,
-				content: post.content,
-				timestamp: post.date,
-				tags: ['blog'],
-				id: post.date.toISOString()
-			}) satisfies TextThought
-	);
+	$: posts = data.posts.map((post) => ({
+		type: 'text' as const,
+		content: post.content,
+		timestamp: post.date,
+		tags: ['blog'],
+		id: post.date.toISOString()
+	}));
 
 	onMount(() => {
-		console.log('Component mounted');
-		// Add smooth scrolling to the whole page
 		document.documentElement.style.scrollBehavior = 'smooth';
+		document.body.classList.add('js-loaded', 'custom-cursor');
 
-		// Add a class to body when JS is available
-		document.body.classList.add('js-loaded');
-		document.body.classList.add('custom-cursor');
-
-		// Initialize cursor position and visibility
+		// Initialize cursor
 		if (cursor && cursorDot) {
-			console.log('Initializing cursor elements:', {
-				cursor: cursor.className,
-				cursorDot: cursorDot.className
-			});
-
-			// Set initial position to center of screen
-			mouseX = window.innerWidth / 2;
-			mouseY = window.innerHeight / 2;
-			cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
-			cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
-
-			// Make cursors visible
+			targetX = mouseX = window.innerWidth / 2;
+			targetY = mouseY = window.innerHeight / 2;
+			const transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+			cursor.style.transform = transform;
+			cursorDot.style.transform = transform;
 			requestAnimationFrame(() => {
 				cursor.classList.add('ready');
 				cursorDot.classList.add('ready');
-				console.log('Added ready classes:', {
-					cursor: cursor.className,
-					cursorDot: cursorDot.className
-				});
 			});
 		}
 
-		// Log all link elements for debugging
-		const links = document.querySelectorAll('a');
-		console.log('Found links:', links.length);
-		links.forEach((link) => {
-			console.log('Link href:', link.href, 'Text:', link.textContent?.trim());
+		document.querySelectorAll('a').forEach((link) => {
+			link.addEventListener('mouseenter', () => handleLinkHover(true));
+			link.addEventListener('mouseleave', () => handleLinkHover(false));
 		});
 
-		// Add event listeners directly to all links
-		links.forEach((link) => {
-			link.addEventListener('mouseenter', handleMouseEnter);
-			link.addEventListener('mouseleave', handleMouseLeave);
-		});
-
-		document.addEventListener('mousemove', updateCursor);
-
-		// Show/hide cursor when window loses/gains focus
-		window.addEventListener('focus', () => {
-			cursor?.classList.add('ready');
-			cursorDot?.classList.add('ready');
-			console.log('Window focus - adding ready class');
-		});
-
-		window.addEventListener('blur', () => {
-			cursor?.classList.remove('ready');
-			cursorDot?.classList.remove('ready');
-			console.log('Window blur - removing ready class');
-		});
-
-		// Set up intersection observer for fade-in animations
+		// Set up animations
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
-						requestAnimationFrame(() => {
-							entry.target.classList.add('show');
-						});
+						entry.target.classList.add('show');
 						observer.unobserve(entry.target);
 					}
 				});
 			},
-			{
-				threshold: 0.1,
-				rootMargin: '0px 0px -50px 0px'
-			}
+			{ threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
 		);
 
-		// Initialize animations with a slight delay to ensure proper initial state
 		requestAnimationFrame(() => {
 			document.querySelectorAll('.animate-on-scroll').forEach((el) => {
 				el.classList.add('ready');
-				if (el.getBoundingClientRect().top < window.innerHeight) {
-					el.classList.add('show');
-				} else {
-					observer.observe(el);
-				}
+				el.getBoundingClientRect().top < window.innerHeight
+					? el.classList.add('show')
+					: observer.observe(el);
 			});
 		});
 
+		document.addEventListener('mousemove', handleMouseMove);
+		window.addEventListener('focus', () => cursor?.classList.add('ready'));
+		window.addEventListener('blur', () => cursor?.classList.remove('ready'));
+
+		// Start the animation loop
+		rafId = requestAnimationFrame(updateCursor);
+
 		return () => {
-			document.removeEventListener('mousemove', updateCursor);
-			links.forEach((link) => {
-				link.removeEventListener('mouseenter', handleMouseEnter);
-				link.removeEventListener('mouseleave', handleMouseLeave);
-			});
+			document.removeEventListener('mousemove', handleMouseMove);
+			cancelAnimationFrame(rafId);
 		};
 	});
 </script>
@@ -177,19 +109,16 @@
 	<meta name="description" content="My personal website and blog" />
 </svelte:head>
 
-<!-- Custom cursor elements -->
 <div bind:this={cursor} class="cursor" class:hover={isHovering} />
 <div bind:this={cursorDot} class="cursor-dot" class:hover={isHovering} />
 
 <main class="min-h-screen bg-gray-950 text-gray-100">
 	<div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-		<!-- About section -->
 		<section class="animate-on-scroll ready show prose prose-lg prose-invert mb-16 max-w-none">
 			{@html indexHtml}
 			<hr class="mt-8 border-gray-800" />
 		</section>
 
-		<!-- Blog posts as cards -->
 		<section class="mx-auto grid w-full place-items-center gap-6 sm:gap-8">
 			{#each posts as post, i}
 				<div class="animate-on-scroll ready show w-full">
@@ -213,13 +142,10 @@
 		color: theme(colors.gray.100);
 	}
 
-	/* Animation styles */
 	.animate-on-scroll {
 		opacity: 1;
 		transform: translateY(0);
-		transition:
-			opacity 0.6s ease-out,
-			transform 0.6s ease-out;
+		transition: all 0.6s ease-out;
 		will-change: opacity, transform;
 	}
 
@@ -228,12 +154,6 @@
 		transform: translateY(20px);
 	}
 
-	.animate-on-scroll.show {
-		opacity: 1;
-		transform: translateY(0);
-	}
-
-	/* Basic markdown styles */
 	:global(.prose) {
 		@apply text-gray-100;
 	}
@@ -271,7 +191,6 @@
 		background-repeat: no-repeat;
 		transition: all 0.3s ease;
 		z-index: 2;
-		position: relative;
 	}
 
 	:global(.prose a:hover) {
@@ -295,11 +214,7 @@
 		@apply border-l-4 border-gray-700 pl-4 italic;
 	}
 
-	/* Custom cursor styles */
-	:global(body.custom-cursor) {
-		cursor: none;
-	}
-
+	:global(body.custom-cursor),
 	:global(body.custom-cursor *) {
 		cursor: none;
 	}
@@ -313,25 +228,25 @@
 		height: 36px;
 		border: 1px solid theme(colors.blue.400 / 40%);
 		border-radius: 50%;
-		transform-origin: 0 0;
-		transition:
-			width 0.3s ease,
-			height 0.3s ease;
+		transform-origin: center;
 		z-index: 9999;
-		margin-left: -18px; /* Half the width */
-		margin-top: -18px; /* Half the height */
-		backdrop-filter: blur(4px);
+		margin: -18px 0 0 -18px;
 		background: theme(colors.blue.400 / 5%);
+		will-change: transform;
 	}
 
 	.cursor.hover {
 		width: 48px;
 		height: 48px;
-		margin-left: -24px; /* Half the hover width */
-		margin-top: -24px; /* Half the hover height */
+		margin: -24px 0 0 -24px;
 		border-color: theme(colors.blue.400);
 		background-color: theme(colors.blue.400 / 10%);
-		backdrop-filter: none;
+		transition:
+			width 0.3s ease,
+			height 0.3s ease,
+			margin 0.3s ease,
+			border-color 0.3s ease,
+			background-color 0.3s ease;
 	}
 
 	.cursor-dot {
@@ -343,21 +258,19 @@
 		height: 4px;
 		background: theme(colors.blue.400 / 90%);
 		border-radius: 50%;
-		transform-origin: 0 0;
-		transition:
-			width 0.3s ease,
-			height 0.3s ease;
+		transform-origin: center;
 		z-index: 9999;
-		margin-left: -2px; /* Half the width */
-		margin-top: -2px; /* Half the height */
-		backdrop-filter: blur(2px);
+		margin: -2px 0 0 -2px;
+		will-change: transform;
 	}
 
 	.cursor-dot.hover {
 		width: 8px;
 		height: 8px;
-		margin-left: -4px; /* Half the hover width */
-		margin-top: -4px; /* Half the hover height */
-		backdrop-filter: none;
+		margin: -4px 0 0 -4px;
+		transition:
+			width 0.3s ease,
+			height 0.3s ease,
+			margin 0.3s ease;
 	}
 </style>
