@@ -3,7 +3,9 @@
 </script>
 
 <div class="app">
-	<slot />
+	<div class="container">
+		<slot />
+	</div>
 </div>
 
 <style lang="postcss">
@@ -22,5 +24,12 @@
 		display: grid;
 		grid-template-rows: 1fr;
 		min-height: 100vh;
+	}
+
+	.container {
+		width: 100%;
+		max-width: 65ch;
+		margin: 0 auto;
+		padding: 2rem;
 	}
 </style>

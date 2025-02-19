@@ -1,0 +1,49 @@
+/* Aileron Sans */
+@font-face {
+    font-family: 'Aileron';
+    src: url('/fonts/Aileron-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Aileron';
+    src: url('/fonts/Aileron-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Aileron';
+    src: url('/fonts/Aileron-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* EB Garamond */
+@font-face {
+    font-family: 'EB Garamond';
+    src: url('/fonts/EBGaramond-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'EB Garamond';
+    src: url('/fonts/EBGaramond-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'EB Garamond';
+    src: url('/fonts/EBGaramond-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
