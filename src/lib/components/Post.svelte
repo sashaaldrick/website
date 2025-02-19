@@ -17,16 +17,25 @@
 			(entries) => {
 				entries.forEach((entry) => {
 					// Calculate how close to center the element is
-					if (entry.isIntersecting) {
-						const elementCenter =
-							entry.boundingClientRect.top + entry.boundingClientRect.height / 2;
-						const viewportCenter = window.innerHeight / 2;
-						const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
-						const threshold = window.innerHeight * 0.2; // 20% of viewport height
+					const elementCenter = entry.boundingClientRect.top + entry.boundingClientRect.height / 2;
+					const viewportCenter = window.innerHeight / 2;
+					const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
+					const threshold = window.innerHeight * 0.2; // 20% of viewport height
 
-						isInCenter = distanceFromCenter < threshold;
+					// Check if this is the last post and we're near the bottom of the page
+					const isLastPost = !article.nextElementSibling;
+					const isNearBottom =
+						window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
+
+					if (entry.isIntersecting) {
+						if (isLastPost && isNearBottom) {
+							isInCenter = true;
+						} else {
+							isInCenter = distanceFromCenter < threshold;
+						}
 					} else {
-						isInCenter = false;
+						// Only keep focus for the last post at bottom
+						isInCenter = isLastPost && isNearBottom;
 					}
 				});
 			},
@@ -40,10 +49,32 @@
 			observer.observe(article);
 		}
 
+		// Add scroll event listener to handle last post focus
+		const handleScroll = () => {
+			if (article && !article.nextElementSibling) {
+				const isNearBottom =
+					window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
+				if (isNearBottom) {
+					isInCenter = true;
+				} else {
+					// Allow the last post to lose focus when scrolling up
+					const elementCenter =
+						article.getBoundingClientRect().top + article.getBoundingClientRect().height / 2;
+					const viewportCenter = window.innerHeight / 2;
+					const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
+					const threshold = window.innerHeight * 0.2;
+					isInCenter = distanceFromCenter < threshold;
+				}
+			}
+		};
+
+		window.addEventListener('scroll', handleScroll);
+
 		return () => {
 			if (article) {
 				observer.unobserve(article);
 			}
+			window.removeEventListener('scroll', handleScroll);
 		};
 	});
 </script>
