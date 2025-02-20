@@ -41,6 +41,7 @@
 	}
 
 	$: isHomePage = $page.url.pathname === '/';
+	$: isPhotosPage = $page.url.pathname === '/photos';
 </script>
 
 <nav>
@@ -51,6 +52,13 @@
 			</li>
 			<li>
 				<a href="/photos" class="nav-link text-lg">Photos</a>
+			</li>
+		{:else if isPhotosPage}
+			<li>
+				<a href="/" class="nav-link text-lg">Home</a>
+			</li>
+			<li>
+				<a href="/now" class="nav-link text-lg">Now</a>
 			</li>
 		{:else}
 			<li>
