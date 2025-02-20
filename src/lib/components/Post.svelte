@@ -13,68 +13,33 @@
 	$: html = marked.parse(thought.content) as string;
 
 	onMount(() => {
-		const observer = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					// Calculate how close to center the element is
-					const elementCenter = entry.boundingClientRect.top + entry.boundingClientRect.height / 2;
-					const viewportCenter = window.innerHeight / 2;
-					const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
-					const threshold = window.innerHeight * 0.2; // 20% of viewport height
+		const isLastPost = !article.nextElementSibling;
 
-					// Check if this is the last post and we're near the bottom of the page
-					const isLastPost = !article.nextElementSibling;
-					const isNearBottom =
-						window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
+		function updateFocus() {
+			const rect = article.getBoundingClientRect();
+			const viewportHeight = window.innerHeight;
+			const documentHeight = document.documentElement.scrollHeight;
+			const scrollY = window.scrollY;
 
-					if (entry.isIntersecting) {
-						if (isLastPost && isNearBottom) {
-							isInCenter = true;
-						} else {
-							isInCenter = distanceFromCenter < threshold;
-						}
-					} else {
-						// Only keep focus for the last post at bottom
-						isInCenter = isLastPost && isNearBottom;
-					}
-				});
-			},
-			{
-				threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
-				rootMargin: '-20% 0px -20% 0px'
-			}
-		);
-
-		if (article) {
-			observer.observe(article);
-		}
-
-		// Add scroll event listener to handle last post focus
-		const handleScroll = () => {
-			if (article && !article.nextElementSibling) {
-				const isNearBottom =
-					window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
-				if (isNearBottom) {
+			if (isLastPost) {
+				// If we're near the bottom of the page
+				if (scrollY + viewportHeight > documentHeight - 50) {
 					isInCenter = true;
-				} else {
-					// Allow the last post to lose focus when scrolling up
-					const elementCenter =
-						article.getBoundingClientRect().top + article.getBoundingClientRect().height / 2;
-					const viewportCenter = window.innerHeight / 2;
-					const distanceFromCenter = Math.abs(elementCenter - viewportCenter);
-					const threshold = window.innerHeight * 0.2;
-					isInCenter = distanceFromCenter < threshold;
+					return;
 				}
 			}
-		};
 
-		window.addEventListener('scroll', handleScroll);
+			// Standard center-based focus for all other cases
+			const elementCenter = rect.top + rect.height / 2;
+			const viewportCenter = viewportHeight / 2;
+			isInCenter = Math.abs(elementCenter - viewportCenter) < viewportHeight * 0.2;
+		}
+
+		window.addEventListener('scroll', updateFocus);
+		updateFocus();
 
 		return () => {
-			if (article) {
-				observer.unobserve(article);
-			}
-			window.removeEventListener('scroll', handleScroll);
+			window.removeEventListener('scroll', updateFocus);
 		};
 	});
 </script>

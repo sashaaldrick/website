@@ -35,7 +35,6 @@ export async function load() {
             posts: sortedPosts
         };
     } catch (e) {
-        console.error('Error loading content:', e);
         return {
             indexContent: '# Welcome\n\nAdd content to `src/content/index.md` to customize this page.',
             posts: []
