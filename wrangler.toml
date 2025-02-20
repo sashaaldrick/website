@@ -1,2 +1,3 @@
 [site]
-bucket = ".svelte-kit/cloudflare" 
+bucket = ".svelte-kit/cloudflare"
+main = ".svelte-kit/cloudflare/_worker.js" 
